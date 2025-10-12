@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  cron-runner:
+    build:
+      context: ../  # Контекст сборки - корневая папка проекта
+      dockerfile: lab03/Dockerfile
+    container_name: lab03_cron_runner
+    restart: always
+    environment:
+      # URL для доступа к сервису, запущенному на хост-машине из Docker
+      - API_URL=http://host.docker.internal:8080
+      # Ваш API ключ, если вы его меняли
+      - API_KEY=EXAMPLE_API_KEY
+    volumes:
+      # Привязываем папку data и лог-файл к хост-машине для удобного доступа
+      - ../data:/app/data
+      - ../error.log:/app/error.log

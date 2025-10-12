@@ -1,0 +1,7 @@
+# Задание 1: Ежедневно в 6:00 получать курс MDL к EUR за предыдущий день.
+0 6 * * * root    python3 /app/currency_exchange_rate.py MDL EUR $(date -d "yesterday" +\%Y-\%m-\%d) >> /var/log/cron.log 2>&1
+
+# Задание 2: Еженедельно в пятницу в 17:00 получать курс MDL к USD за предыдущую неделю (7 дней назад).
+0 17 * * 5  root    python3 /app/currency_exchange_rate.py MDL USD $(date -d "7 days ago" +\%Y-\%m-\%d) >> /var/log/cron.log 2>&1
+
+# Cron требует пустую строку в конце файла для корректной работы
