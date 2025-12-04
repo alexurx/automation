@@ -1,0 +1,11 @@
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y openssh-server python3 sudo && rm -rf /var/lib/apt/lists/*
+RUN useradd -m -d /home/ansible -s /bin/bash ansible && echo "ansible:ansible" | chpasswd && usermod -aG sudo ansible
+RUN echo "ansible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN mkdir -p /home/ansible/.ssh && chmod 700 /home/ansible/.ssh
+COPY keys/ansible_key.pub /home/ansible/.ssh/authorized_keys
+RUN chmod 600 /home/ansible/.ssh/authorized_keys && chown -R ansible:ansible /home/ansible/.ssh
+RUN mkdir /var/run/sshd
+EXPOSE 22 80
+CMD ["/usr/sbin/sshd", "-D"]

@@ -1,0 +1,13 @@
+---
+- name: Deploy PHP Application
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Create index.php
+      copy:
+        dest: /var/www/html/index.php
+        content: "<?php echo '<h1>Deployed via Jenkins & Ansible successfully!</h1>'; ?>"
+    - name: Remove default index.html
+      file:
+        path: /var/www/html/index.html
+        state: absent

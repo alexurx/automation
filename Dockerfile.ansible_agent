@@ -1,0 +1,16 @@
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y openssh-server openjdk-17-jdk software-properties-common git curl \
+    && add-apt-repository --yes --update ppa:ansible/ansible \
+    && apt-get install -y ansible && rm -rf /var/lib/apt/lists/*
+RUN useradd -m -d /home/jenkins -s /bin/bash jenkins && echo "jenkins:jenkins" | chpasswd
+RUN mkdir -p /home/jenkins/.ssh && chmod 700 /home/jenkins/.ssh
+COPY keys/jenkins_agent.pub /home/jenkins/.ssh/authorized_keys
+RUN chmod 600 /home/jenkins/.ssh/authorized_keys
+COPY keys/ansible_key /home/jenkins/.ssh/id_rsa
+RUN chmod 600 /home/jenkins/.ssh/id_rsa
+RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+RUN chown -R jenkins:jenkins /home/jenkins/.ssh
+RUN mkdir /var/run/sshd
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]

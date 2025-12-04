@@ -1,0 +1,16 @@
+---
+- name: Setup Web Server
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+    - name: Install Apache2 and PHP
+      apt:
+        name: [apache2, php, libapache2-mod-php]
+        state: present
+    - name: Ensure Apache is running
+      service:
+        name: apache2
+        state: started
